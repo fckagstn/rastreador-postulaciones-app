@@ -15,12 +15,14 @@ class Empresa(Base):
     __tablename__= "empresas"
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre_empresa: Mapped[str] = mapped_column(unique=True)
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="empresa")
 
 class Estado(Base):
     __tablename__ = "estados"
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre_estado: Mapped[str] = mapped_column(unique=True)
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="estado")
     historial: Mapped[list["HistorialEstado"]] = relationship(back_populates="estado")
 
@@ -28,6 +30,7 @@ class Portal(Base):
     __tablename__ = "portales"
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre_portal: Mapped[str] = mapped_column(unique=True)
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="portal")
 
 class Usuario(Base):
@@ -37,18 +40,21 @@ class Usuario(Base):
     apellidos: Mapped[str]
     correo: Mapped[str] = mapped_column(unique=True)
     contrasena_hashed: Mapped[str]
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="usuario")
 
 class Mercado(Base):
     __tablename__ = "mercado"
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(unique=True)
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="mercado")
 
 class Modalidad(Base):
     __tablename__ = "modalidad"
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(unique=True)
+
     postulaciones: Mapped[list["Postulacion"]] = relationship(back_populates="modalidad")
 
 class Postulacion(Base):
