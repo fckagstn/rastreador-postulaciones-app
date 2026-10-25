@@ -50,7 +50,6 @@ class PostulacionEntrada(BaseModel):
     puesto: str
     sueldo_centavos: int | None = Field(ge=1, default=None)
     empresa: str
-    estado_id: int
     portal: str | None = Field(default=None)
     mercado_id: int | None = Field(default=None)
     modalidad_id: int | None = Field(default=None)
