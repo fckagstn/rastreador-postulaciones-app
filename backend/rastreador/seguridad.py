@@ -1,20 +1,17 @@
 import bcrypt
 import jwt
-from configuracion import llave
-from datetime import datetime, timedelta, timezone
+from rastreador.configuracion import llave, tiempo_expiracion
 
 ALGORITMO = "HS256"
 
-# Señuelo que usara la app por el canal lateral de tiempo 
-senuelo = "senuelo123"
-
 def hashear_contrasena(contrasena):
     byte_contrasena = contrasena.encode()                             # Codificar la contraseña a bytes
-    sal = bcrypt.gensalt(rounds=12)
+    sal = bcrypt.gensalt(rounds=10)
     hashed_contrasena = bcrypt.hashpw(byte_contrasena, sal)           # Generar el hash de la contraseña
     return hashed_contrasena.decode()                                 # Retornar el hash en cadena de texto
 
-hash_senuelo = hashear_contrasena(senuelo)                            # Se llama la función hashear_contrasena al señuelo que sera ocupada por los endpoints despues
+# Señuelo que usara la app por el canal lateral de tiempo 
+hash_senuelo = hashear_contrasena("senuelo1234")                      # Se llama la función hashear_contrasena al señuelo que sera ocupada por los endpoints despues
 
 def verificar_contrasena(contrasena, hash_guardado):
     byte_contrasena = contrasena.encode()
@@ -22,7 +19,6 @@ def verificar_contrasena(contrasena, hash_guardado):
     return validacion
 
 def crear_token(id_usuario):
-    tiempo_expiracion = datetime.now(timezone.utc) + timedelta(hours=1)     # Una hora de duracion por token
     datos = {
         "sub": str(id_usuario),
         "exp": tiempo_expiracion
