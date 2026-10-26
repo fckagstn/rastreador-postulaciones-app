@@ -1,5 +1,6 @@
 import os 
 from dotenv import load_dotenv
+from datetime import datetime, timedelta, timezone
 
 load_dotenv()
 
@@ -21,3 +22,5 @@ if lista_variables_faltantes:
 db_user = variables_obligatorias["DB_USER"]
 db_password = variables_obligatorias["DB_PASSWORD"]
 llave = variables_obligatorias["LLAVE"]
+
+tiempo_expiracion = datetime.now(timezone.utc) + timedelta(minutes=10)     # 10 minutos de duracion por token
