@@ -1,6 +1,7 @@
 import bcrypt
 import jwt
-from rastreador.configuracion import llave, tiempo_expiracion
+from rastreador.configuracion import llave, duracion_token
+from datetime import datetime, timedelta, timezone
 
 ALGORITMO = "HS256"
 
@@ -19,6 +20,7 @@ def verificar_contrasena(contrasena, hash_guardado):
     return validacion
 
 def crear_token(id_usuario):
+    tiempo_expiracion = datetime.now(timezone.utc) + timedelta(minutes=int(duracion_token))     # 10 minutos de duracion por token segun nuestra variable de entorno 'duracion_token'
     datos = {
         "sub": str(id_usuario),
         "exp": tiempo_expiracion
