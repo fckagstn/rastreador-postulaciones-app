@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException  
-from rastreador.esquemas import UsuarioEntrada, UsuarioSalida
-from rastreador.dependencias import obtener_sesion
-from rastreador.seguridad import hashear_contrasena
+from rastreador.esquemas import UsuarioEntrada, UsuarioSalida, LoginEntrada
+from rastreador.dependencias import obtener_sesion, obtener_usuario
+from rastreador.seguridad import hashear_contrasena, hash_senuelo, verificar_contrasena, crear_token
 from rastreador.modelos_mapeados import Usuario
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select
 
 router = APIRouter()
 
@@ -37,3 +38,40 @@ def crear_nuevo_usuario(usuario: UsuarioEntrada, session = Depends(obtener_sesio
         raise
 
     return nuevo_usuario
+
+@router.post("/login")
+def loguearse(datos: LoginEntrada, session = Depends(obtener_sesion)):
+    # Traer los datos del usuario donde el correo sea igual en la BD
+    consulta = select(Usuario).where(Usuario.correo == datos.correo)
+    datos_usuario = session.scalars(consulta).first()
+
+    # Si no se encontro el usuario, usar el 'hash_senuelo' por el canal de tiempo para simular el tiempo de respuesta y cortar el programa
+    if datos_usuario is None:
+        verificar_contrasena(datos.contrasena, hash_senuelo)
+        raise HTTPException(
+            status_code=401,
+            detail="Credenciales incorrectas",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+    # Guardar el valor True o False a la validación de contraseñas y usarlo para decidir que hacer
+    validacion = verificar_contrasena(datos.contrasena, datos_usuario.contrasena_hashed)
+
+    if validacion:
+        token = crear_token(datos_usuario.id)
+        datos_login = {
+            "access_token": token,
+            "token_type": "Bearer"
+        }
+        return datos_login
+
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Credenciales incorrectas",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+@router.get("/perfil", response_model=UsuarioSalida)
+def leer_perfil(usuario = Depends(obtener_usuario)):
+    return usuario
