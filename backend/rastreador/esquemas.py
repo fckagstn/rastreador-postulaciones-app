@@ -66,3 +66,9 @@ class PostulacionSalida(BaseModel):
     mercado: MercadoSalida | None
     modalidad: ModalidadSalida | None
     fecha_postulacion : date
+
+# ==========LOGIN ENTRADA==============
+class LoginEntrada(BaseModel):
+    correo: str
+    contrasena: str
+    
