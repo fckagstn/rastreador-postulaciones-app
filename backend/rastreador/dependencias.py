@@ -21,8 +21,8 @@ def obtener_usuario(authorization: str | None = Header(None), session = Depends(
 
     token_partes = authorization.split(" ")       # Si se mando la cabecera, separar el formato para obtener '['Bearer', 'mi_token_secreto_123']'
 
-    # Si el tamaño de la lista 'token_partes' es diferente de 2 o si el primer elemento de la lista es diferente de 'bearer', cortar el programa
-    if len(token_partes) != 2 or token_partes[0] != "bearer":   
+    # Si el tamaño de la lista 'token_partes' es diferente de 2 o si el primer elemento de la lista es diferente de 'Bearer', cortar el programa
+    if len(token_partes) != 2 or token_partes[0] != "Bearer":   
         raise HTTPException(
             status_code=401,
             detail="Formato de token invalido. Usa 'Bearer <token>'",
