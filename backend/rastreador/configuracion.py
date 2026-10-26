@@ -9,7 +9,8 @@ db_port = os.getenv("DB_PORT", "5432")
 # Diccionario de variables necesarias para poder iniciar el programa
 variables_obligatorias = {
     "DB_USER": os.getenv("DB_USER"),
-    "DB_PASSWORD": os.getenv("DB_PASSWORD")
+    "DB_PASSWORD": os.getenv("DB_PASSWORD"),
+    "LLAVE": os.getenv("LLAVE")
 }
 
 # Comprension que mete el nombre de la variable faltante en caso de que no haya valor en el diccionario
@@ -19,3 +20,4 @@ if lista_variables_faltantes:
 
 db_user = variables_obligatorias["DB_USER"]
 db_password = variables_obligatorias["DB_PASSWORD"]
+llave = variables_obligatorias["LLAVE"]
