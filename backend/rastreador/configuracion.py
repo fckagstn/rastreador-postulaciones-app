@@ -1,6 +1,5 @@
 import os 
 from dotenv import load_dotenv
-from datetime import datetime, timedelta, timezone
 
 load_dotenv()
 
@@ -11,7 +10,8 @@ db_port = os.getenv("DB_PORT", "5432")
 variables_obligatorias = {
     "DB_USER": os.getenv("DB_USER"),
     "DB_PASSWORD": os.getenv("DB_PASSWORD"),
-    "LLAVE": os.getenv("LLAVE")
+    "LLAVE": os.getenv("LLAVE"),
+    "DURACION_TOKEN": os.getenv("DURACION_TOKEN")
 }
 
 # Comprension que mete el nombre de la variable faltante en caso de que no haya valor en el diccionario
@@ -22,5 +22,4 @@ if lista_variables_faltantes:
 db_user = variables_obligatorias["DB_USER"]
 db_password = variables_obligatorias["DB_PASSWORD"]
 llave = variables_obligatorias["LLAVE"]
-
-tiempo_expiracion = datetime.now(timezone.utc) + timedelta(minutes=10)     # 10 minutos de duracion por token
+duracion_token = variables_obligatorias["DURACION_TOKEN"]
