@@ -5,6 +5,7 @@ from rastreador.seguridad import hashear_contrasena, hash_senuelo, verificar_con
 from rastreador.modelos_mapeados import Usuario
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
+from psycopg.errors import UniqueViolation
 
 router = APIRouter()
 
@@ -29,7 +30,7 @@ def crear_nuevo_usuario(usuario: UsuarioEntrada, session = Depends(obtener_sesio
     # Camino por si es un error de duplicado (UNIQUE)
     except IntegrityError as e:
         session.rollback()
-        if isinstance(e.orig, IntegrityError):
+        if isinstance(e.orig, UniqueViolation):
             raise HTTPException(
                 status_code=409,
                 detail="El correo no se encuentra disponible, prueba con otro"
@@ -61,7 +62,7 @@ def loguearse(datos: LoginEntrada, session = Depends(obtener_sesion)):
         token = crear_token(datos_usuario.id)
         datos_login = {
             "access_token": token,
-            "token_type": "Bearer"
+            "token_type": "bearer"
         }
         return datos_login
 
