@@ -1,11 +1,11 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from datetime import date
 
 # =========USUARIOS ENTRADA Y SALIDA=============
 class UsuarioEntrada(BaseModel):
     nombre: str
     apellidos: str
-    correo: str
+    correo: EmailStr
     contrasena: str = Field(max_length=72)
 
 class UsuarioSalida(BaseModel):
@@ -13,7 +13,7 @@ class UsuarioSalida(BaseModel):
     id: int
     nombre: str
     apellidos: str
-    correo: str
+    correo: EmailStr
 
 # =========PORTALES ENTRADA Y SALIDA============
 class PortalEntrada(BaseModel):
@@ -69,6 +69,6 @@ class PostulacionSalida(BaseModel):
 
 # ==========LOGIN ENTRADA==============
 class LoginEntrada(BaseModel):
-    correo: str
+    correo: EmailStr
     contrasena: str
     
