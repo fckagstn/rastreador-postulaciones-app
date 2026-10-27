@@ -16,7 +16,10 @@ hash_senuelo = hashear_contrasena("senuelo1234")                      # Se llama
 
 def verificar_contrasena(contrasena, hash_guardado):
     byte_contrasena = contrasena.encode()
-    validacion = bcrypt.checkpw(byte_contrasena, hash_guardado.encode())    # Verificar si es True o False la contraseña contra el hash guardado en la BD en formato bytes
+    try:
+        validacion = bcrypt.checkpw(byte_contrasena, hash_guardado.encode())    # Verificar si es True o False la contraseña contra el hash guardado en la BD en formato bytes
+    except ValueError:
+        return False
     return validacion
 
 def crear_token(id_usuario):
