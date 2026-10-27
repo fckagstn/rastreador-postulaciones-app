@@ -3,7 +3,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse                   # Para responder en formato JSON a cualquier error
 from fastapi.middleware.cors import CORSMiddleware           # Para habilitar el intercambio de recursos de origen cruzado   
 import logging                                               # Para registrar eventos del programa
-import uuid             
+import uuid           
+import rastreador.rutas.cuentas as cuentas  
 
 logging.basicConfig(
     level=logging.INFO,
@@ -44,6 +45,8 @@ def manejador_error_servidor(request, exc):
             "id_error": clave
         }
     )
+
+app.include_router(cuentas.router)
 
 # Registrar el Middleware
 app.add_middleware(
