@@ -31,7 +31,7 @@ def manejador_validaciones(request, exc):       # Parametros: 'request' lo que m
         else:
             lista_errores.append("El identificador debe ser un numero entero")      # Si no esta en el cuerpo, se asume que esta en en los parametros de la URL
 
-        return JSONResponse(status_code=422, content={"detail": " | ".join(lista_errores)})
+    return JSONResponse(status_code=422, content={"detail": " | ".join(lista_errores)})
 
 @app.exception_handler(Exception)
 def manejador_error_servidor(request, exc):
