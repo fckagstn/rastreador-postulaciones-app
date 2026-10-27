@@ -46,8 +46,6 @@ def manejador_error_servidor(request, exc):
         }
     )
 
-app.include_router(cuentas.router)
-
 # Registrar el Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -56,3 +54,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.include_router(cuentas.router)
