@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware           # Para habilitar el
 import logging                                               # Para registrar eventos del programa
 import uuid           
 import rastreador.rutas.cuentas as cuentas  
+import rastreador.rutas.postulaciones as postulaciones
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,4 +56,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Registrar los routers de cuentas y postulaciones
 app.include_router(cuentas.router)
+app.include_router(postulaciones.router)
