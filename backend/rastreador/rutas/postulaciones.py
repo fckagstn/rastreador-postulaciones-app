@@ -43,9 +43,9 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     nueva_postulacion = Postulacion(
         puesto = postulacion.puesto,
         sueldo_centavos = postulacion.sueldo_centavos,
-        empresa = datos_empresa,                         
-        estado = datos_estado,                                     
-        portal = datos_portal,
+        empresa = datos_empresa,               # Se pasan por medio de relationship sin usar su campo _id                  
+        estado = datos_estado,                 # Se pasan por medio de relationship sin usar su campo _id                            
+        portal = datos_portal,                 # Se pasan por medio de relationship sin usar su campo _id
         usuario_id = id_usuario,
         mercado_id = postulacion.mercado_id,
         modalidad_id = postulacion.modalidad_id,
@@ -53,11 +53,12 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     )
 
     nuevo_historial = HistorialEstado(
-        estado = datos_estado,
-        postulacion = nueva_postulacion,
+        estado = datos_estado,                  # Se pasan por medio de relationship sin usar su campo _id
+        postulacion = nueva_postulacion,        # Se pasan por medio de relationship sin usar su campo _id
         fecha = datetime.now(timezone.utc)
     )
 
+    # Agregar todo y commitear la BD
     session.add(nueva_postulacion)
     session.add(nuevo_historial)
     session.commit()
