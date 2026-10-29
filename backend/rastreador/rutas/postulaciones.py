@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 router = APIRouter(prefix="/postulaciones")
 
-@router.post("", response_model=PostulacionSalida)
+@router.post("", response_model=PostulacionSalida, status_code=201)
 def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obtener_sesion), usuario = Depends(obtener_usuario)):
     id_usuario = usuario.id
 
