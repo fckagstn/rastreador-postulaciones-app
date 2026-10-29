@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from rastreador.dependencias import obtener_sesion, obtener_usuario
 from rastreador.esquemas import PostulacionEntrada, PostulacionSalida
 from sqlalchemy import select
-from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado
+from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
+from datetime import datetime, timezone
 
 router = APIRouter(prefix="/postulaciones")
 
@@ -19,8 +20,8 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     if datos_empresa is None:
         datos_empresa = Empresa(nombre_empresa = empresa)
         session.add(datos_empresa)
-        session.commit()
-        session.refresh(datos_empresa)
+
+    datos_portal = None
 
     # Buscar el portal por nombre primero en la BD, con el portal que dio el usuario, SI ES QUE LO DIO
     if postulacion.portal is not None:
@@ -32,15 +33,20 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
         if datos_portal is None:
             datos_portal = Portal(nombre_portal = portal)
             session.add(datos_portal)
-            session.commit()
-            session.refresh(datos_portal)
+            
+
+    # Traer el estado 'postulado'
+    consulta_estado = select(Estado).where(Estado.nombre_estado == "postulado")
+    datos_estado = session.scalars(consulta_estado).first()
+    if datos_estado is None:
+        raise HTTPException(status_code=500, detail="No se ha creado el estado 'Postulado'")
 
     nueva_postulacion = Postulacion(
         puesto = postulacion.puesto,
         sueldo_centavos = postulacion.sueldo_centavos,
-        empresa_id = datos_empresa.id,                     # Asignar el ID de la empresa extraida de la consulta o creada segun el caso
-        estado_id = 1,                                     # Asignar el estado 'Postulado' por defecto en cada postulación, es el ID 1
-        portal_id = datos_portal.id,
+        empresa = datos_empresa,                         
+        estado = datos_estado,                                     
+        portal = datos_portal,
         usuario_id = id_usuario,
         mercado_id = postulacion.mercado_id,
         modalidad_id = postulacion.modalidad_id,
@@ -49,16 +55,14 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
 
     nuevo_historial = HistorialEstado(
         estado_id = nueva_postulacion.estado_id,
-        postulacion_id = nueva_postulacion.id,
-        fecha = nueva_postulacion.fecha_postulacion
+        postulacion = nueva_postulacion,
+        fecha = datetime.now(timezone.utc)
     )
 
-    try:
-        session.add(nueva_postulacion)
-        session.add(nuevo_historial)
-        session.commit()
-    except:
-        raise
+    session.add(nueva_postulacion)
+    session.add(nuevo_historial)
+    session.commit()
+    
 
     return nueva_postulacion
     
