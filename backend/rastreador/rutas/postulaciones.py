@@ -64,4 +64,13 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     session.commit()
     
     return nueva_postulacion
-    
+
+@router.get("", response_model=list[PostulacionSalida])
+def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
+    id_usuario = usuario.id
+
+    # Traer las postulaciones usando el id extraido del token 
+    consulta_postulaciones = select(Postulacion).where(Postulacion.usuario_id == id_usuario)
+    datos_postulaciones = session.scalars(consulta_postulaciones)
+
+    return datos_postulaciones
