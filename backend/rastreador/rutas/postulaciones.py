@@ -34,7 +34,6 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
             datos_portal = Portal(nombre_portal = portal)
             session.add(datos_portal)
             
-
     # Traer el estado 'postulado'
     consulta_estado = select(Estado).where(Estado.nombre_estado == "postulado")
     datos_estado = session.scalars(consulta_estado).first()
@@ -54,7 +53,7 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     )
 
     nuevo_historial = HistorialEstado(
-        estado_id = nueva_postulacion.estado_id,
+        estado = datos_estado,
         postulacion = nueva_postulacion,
         fecha = datetime.now(timezone.utc)
     )
@@ -63,6 +62,5 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     session.add(nuevo_historial)
     session.commit()
     
-
     return nueva_postulacion
     
