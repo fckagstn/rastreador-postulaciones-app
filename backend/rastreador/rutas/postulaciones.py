@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from rastreador.dependencias import obtener_sesion, obtener_usuario
 from rastreador.esquemas import PostulacionEntrada, PostulacionSalida
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
 from datetime import datetime, timezone
 
@@ -70,7 +71,18 @@ def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(o
     id_usuario = usuario.id
 
     # Traer las postulaciones usando el id extraido del token 
-    consulta_postulaciones = select(Postulacion).where(Postulacion.usuario_id == id_usuario)
+    consulta_postulaciones = (
+        select(Postulacion)
+        .where(Postulacion.usuario_id == id_usuario).
+        options(
+            joinedload(Postulacion.empresa),
+            joinedload(Postulacion.estado),
+            joinedload(Postulacion.portal),
+            joinedload(Postulacion.mercado),
+            joinedload(Postulacion.modalidad)
+        )
+    )
+
     datos_postulaciones = session.scalars(consulta_postulaciones).all()
 
     return datos_postulaciones
