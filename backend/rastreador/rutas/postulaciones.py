@@ -71,6 +71,6 @@ def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(o
 
     # Traer las postulaciones usando el id extraido del token 
     consulta_postulaciones = select(Postulacion).where(Postulacion.usuario_id == id_usuario)
-    datos_postulaciones = session.scalars(consulta_postulaciones)
+    datos_postulaciones = session.scalars(consulta_postulaciones).all()
 
     return datos_postulaciones
