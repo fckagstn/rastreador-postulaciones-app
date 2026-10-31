@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
 from rastreador.esquemas import PostulacionEntrada, PostulacionSalida
 from sqlalchemy import select
@@ -86,3 +86,15 @@ def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(o
     datos_postulaciones = session.scalars(consulta_postulaciones).all()
 
     return datos_postulaciones
+
+@router.get("/{id}", response_model=PostulacionSalida)
+def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
+    id_usuario = usuario.id
+    consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
+
+    if consulta_postulacion is None:
+        raise HTTPException(status_code=403, detail="Esta zona es restringida. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
+
+    datos_postulacion = session.scalars(consulta_postulacion).first()
+
+    return datos_postulacion
