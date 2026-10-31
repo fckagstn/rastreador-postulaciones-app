@@ -45,7 +45,7 @@ class ModalidadSalida(BaseModel):
     id: int
     nombre: str
 
-# =========POSTULACIONES ENTRADA Y SALIDA==========
+# =========POSTULACIONES ENTRADA ,SALIDA Y PARCHE==========
 class PostulacionEntrada(BaseModel):
     puesto: str
     sueldo_centavos: int | None = Field(ge=1, default=None)
@@ -66,6 +66,16 @@ class PostulacionSalida(BaseModel):
     mercado: MercadoSalida | None
     modalidad: ModalidadSalida | None
     fecha_postulacion : date
+
+class PostulacionParche(BaseModel):
+    puesto: str = Field(default=None, min_length=1)
+    sueldo_centavos: int | None = None
+    empresa: str = Field(default=None, min_length=1)
+    estado: str = Field(default=None, min_length=1)
+    portal: str | None = Field(default=None, min_length=1)
+    mercado: str | None = Field(default=None, min_length=1)
+    modalidad: str | None = Field(default=None, min_length=1)
+    fecha_postulacion: date = Field(default=None)
 
 # ==========LOGIN ENTRADA==============
 class LoginEntrada(BaseModel):
