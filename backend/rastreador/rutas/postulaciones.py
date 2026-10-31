@@ -91,10 +91,9 @@ def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(o
 def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
     id_usuario = usuario.id
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-
-    if consulta_postulacion is None:
-        raise HTTPException(status_code=403, detail="Esta zona es restringida. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
-
     datos_postulacion = session.scalars(consulta_postulacion).first()
+
+    if datos_postulacion is None:
+            raise HTTPException(status_code=403, detail="Esta zona es restringida o no hubo coincidencias. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
 
     return datos_postulacion
