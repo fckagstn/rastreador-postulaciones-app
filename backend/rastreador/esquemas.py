@@ -68,13 +68,10 @@ class PostulacionSalida(BaseModel):
     fecha_postulacion : date
 
 class PostulacionParche(BaseModel):
-    puesto: str = Field(default=None, min_length=1)
+    puesto: str | None = Field(default=None, min_length=1)
     sueldo_centavos: int | None = None
-    empresa: str = Field(default=None, min_length=1)
-    estado: str = Field(default=None, min_length=1)
-    portal: str | None = Field(default=None, min_length=1)
-    mercado: str | None = Field(default=None, min_length=1)
-    modalidad: str | None = Field(default=None, min_length=1)
+    mercado_id: int | None = Field(default=None, min_length=1)
+    modalidad_id: int | None = Field(default=None, min_length=1)
     fecha_postulacion: date = Field(default=None)
 
 # ==========LOGIN ENTRADA==============
