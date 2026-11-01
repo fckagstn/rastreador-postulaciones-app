@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
-from rastreador.esquemas import PostulacionEntrada, PostulacionSalida
+from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
 from datetime import datetime, timezone
+from sqlalchemy.exc import IntegrityError
+from psycopg.errors import UniqueViolation
 
 router = APIRouter(prefix="/postulaciones")
 
@@ -97,3 +99,28 @@ def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), 
             raise HTTPException(status_code=403, detail="Esta zona es restringida o no hubo coincidencias. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
 
     return datos_postulacion
+
+@router.patch("/{id}", response_model=PostulacionSalida)
+def actualizar_parcial_producto(
+    postulacion: PostulacionParche, 
+    id: int = Path(ge=1), 
+    usuario = Depends(obtener_usuario), 
+    session = Depends(obtener_sesion)
+):
+    id_usuario = usuario.id
+
+    # Buscar la postulacion para evaluar si su condicion es None o se procede a actualizar
+    consulta_postulacion = session.get(Postulacion, id)
+    if consulta_postulacion is None:
+        raise HTTPException(status_code=403, detail="Esta zona es restringida o no hubo coincidencias. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
+
+    datos = postulacion.model_dump(exclude_unset=True)
+    if not datos:
+        raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos")
+
+    for clave, valor in datos.items():
+        setattr(consulta_postulacion, clave, valor)
+
+    session.commit()
+    return consulta_postulacion
+    
