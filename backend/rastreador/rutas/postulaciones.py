@@ -110,7 +110,7 @@ def actualizar_parcial_postulacion(
     id_usuario = usuario.id
 
     # Buscar la postulacion para evaluar si su condicion es None o se procede a actualizar
-    consulta_postulacion = session.get(Postulacion, id)
+    consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
     if consulta_postulacion is None:
         raise HTTPException(status_code=403, detail="Esta zona es restringida o no hubo coincidencias. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
 
@@ -126,7 +126,8 @@ def actualizar_parcial_postulacion(
 
 @router.delete("/{id}", status_code=204)
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
-    consulta_postulacion  = session.get(Postulacion, id)
+    id_usuario = usuario.id
+    consulta_postulacion  = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
     if consulta_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que deseas eliminar")
 
