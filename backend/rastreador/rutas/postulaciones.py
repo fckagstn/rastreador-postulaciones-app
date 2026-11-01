@@ -96,7 +96,7 @@ def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), 
     datos_postulacion = session.scalars(consulta_postulacion).first()
 
     if datos_postulacion is None:
-            raise HTTPException(status_code=403, detail="Esta zona es restringida o no hubo coincidencias. Si crees que se trata de un error, por favor contacta al equipo de soporte.")
+            raise HTTPException(status_code=404, detail="No existe la postulación")
 
     return datos_postulacion
 
