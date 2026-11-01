@@ -124,3 +124,11 @@ def actualizar_parcial_postulacion(
     session.commit()
     return consulta_postulacion
 
+@router.delete("/{id}", status_code=204)
+def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
+    consulta_postulacion  = session.get(Postulacion, id)
+    if consulta_postulacion is None:
+        raise HTTPException(status_code=404, detail="No existe la postulacion que deseas eliminar")
+
+    session.delete(consulta_postulacion)
+    session.commit()
