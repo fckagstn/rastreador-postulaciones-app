@@ -101,7 +101,7 @@ def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), 
     return datos_postulacion
 
 @router.patch("/{id}", response_model=PostulacionSalida)
-def actualizar_parcial_producto(
+def actualizar_parcial_postulacion(
     postulacion: PostulacionParche, 
     id: int = Path(ge=1), 
     usuario = Depends(obtener_usuario), 
@@ -123,4 +123,4 @@ def actualizar_parcial_producto(
 
     session.commit()
     return consulta_postulacion
-    
+
