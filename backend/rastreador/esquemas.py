@@ -30,11 +30,6 @@ class EmpresaSalida(BaseModel):
     id: int
     nombre_empresa: str
 
-class EstadoSalida(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
-    nombre_estado: str
-
 class MercadoSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -73,6 +68,15 @@ class PostulacionParche(BaseModel):
     mercado_id: int | None = Field(default=None, min_length=1)
     modalidad_id: int | None = Field(default=None, min_length=1)
     fecha_postulacion: date = Field(default=None)
+
+# =============ESTADO ENTRADA Y SALIDA===============
+class EstadoEntrada(BaseModel):
+    estado_id: int = Field(min_length=1)
+
+class EstadoSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    nombre_estado: str
 
 # ==========LOGIN ENTRADA==============
 class LoginEntrada(BaseModel):
