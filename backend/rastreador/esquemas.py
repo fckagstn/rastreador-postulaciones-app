@@ -71,7 +71,7 @@ class PostulacionParche(BaseModel):
 
 # =============ESTADO ENTRADA Y SALIDA===============
 class EstadoEntrada(BaseModel):
-    estado_id: str
+    estado: str
 
 class EstadoSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)

@@ -137,13 +137,21 @@ def actualizar_estado_postulacion(
     if datos_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que buscas")
 
-    datos = estado.model_dump(exclude_unset=True)
-    if not datos:
-        raise HTTPException(status_code=422, detail="Los datos proporcionados no son validos")
+    nombre = estado.estado.strip().lower()
+    consulta_estado = select(Estado).where(Estado.nombre_estado == nombre)
+    datos_estado = session.scalars(consulta_estado).first()
+    if datos_estado is None:
+        raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos para procesar la solicitud")
 
-    for clave, valor in datos.items():
-        setattr(datos_postulacion, clave, valor)
+    datos_postulacion.estado = datos_estado
 
+    nuevo_historial = HistorialEstado(
+        estado = datos_estado,
+        postulacion = datos_postulacion,
+        fecha = datetime.now(timezone.utc)
+    )
+
+    session.add(nuevo_historial)
     session.commit()
     return datos_postulacion
 
