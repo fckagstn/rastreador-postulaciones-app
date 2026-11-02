@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
-from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche
+from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
@@ -117,6 +117,28 @@ def actualizar_parcial_postulacion(
     datos = postulacion.model_dump(exclude_unset=True)
     if not datos:
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos")
+
+    for clave, valor in datos.items():
+        setattr(consulta_postulacion, clave, valor)
+
+    session.commit()
+    return consulta_postulacion
+
+@router.patch("/{id}/estado", response_model=PostulacionSalida)
+def actualizar_estado_postulacion(
+    estado: EstadoEntrada, 
+    id: int = Path(ge=1), 
+    usuario = Depends(obtener_usuario), 
+    session = Depends(obtener_sesion)
+):
+    id_usuario = usuario.id
+    consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
+    if consulta_postulacion is None:
+        raise HTTPException(status_code=404, detail="No existe la postulacion que buscas")
+
+    datos = estado.model_dump(exclude_unset=True)
+    if not datos:
+        raise HTTPException(status_code=422, detail="Los datos proporcionados no son validos")
 
     for clave, valor in datos.items():
         setattr(consulta_postulacion, clave, valor)
