@@ -111,7 +111,8 @@ def actualizar_parcial_postulacion(
 
     # Buscar la postulacion para evaluar si su condicion es None o se procede a actualizar
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    if consulta_postulacion is None:
+    datos_postulacion = session.scalars(consulta_postulacion).first()
+    if datos_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulación que buscas")
 
     datos = postulacion.model_dump(exclude_unset=True)
@@ -133,7 +134,8 @@ def actualizar_estado_postulacion(
 ):
     id_usuario = usuario.id
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    if consulta_postulacion is None:
+    datos_postulacion = session.scalars(consulta_postulacion).first()
+    if datos_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que buscas")
 
     datos = estado.model_dump(exclude_unset=True)
@@ -150,8 +152,9 @@ def actualizar_estado_postulacion(
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
     id_usuario = usuario.id
     consulta_postulacion  = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    if consulta_postulacion is None:
+    datos_postulacion = session.scalars(consulta_postulacion).first()
+    if datos_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que deseas eliminar")
 
-    session.delete(consulta_postulacion)
+    session.delete(datos_postulacion)
     session.commit()
