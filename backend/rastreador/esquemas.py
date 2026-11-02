@@ -65,9 +65,9 @@ class PostulacionSalida(BaseModel):
 class PostulacionParche(BaseModel):
     puesto: str | None = Field(default=None, min_length=1)
     sueldo_centavos: int | None = None
-    mercado_id: int | None = Field(default=None, min_length=1)
-    modalidad_id: int | None = Field(default=None, min_length=1)
-    fecha_postulacion: date = Field(default=None)
+    mercado_id: int | None = Field(default=None)
+    modalidad_id: int | None = Field(default=None)
+    fecha_postulacion: date | None = Field(default=None)
 
 # =============ESTADO ENTRADA Y SALIDA===============
 class EstadoEntrada(BaseModel):
