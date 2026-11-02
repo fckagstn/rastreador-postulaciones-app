@@ -5,8 +5,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
 from datetime import datetime, timezone
-from sqlalchemy.exc import IntegrityError
-from psycopg.errors import UniqueViolation
 
 router = APIRouter(prefix="/postulaciones")
 
@@ -120,10 +118,10 @@ def actualizar_parcial_postulacion(
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos")
 
     for clave, valor in datos.items():
-        setattr(consulta_postulacion, clave, valor)
+        setattr(datos_postulacion, clave, valor)
 
     session.commit()
-    return consulta_postulacion
+    return datos_postulacion
 
 @router.patch("/{id}/estado", response_model=PostulacionSalida)
 def actualizar_estado_postulacion(
@@ -133,6 +131,7 @@ def actualizar_estado_postulacion(
     session = Depends(obtener_sesion)
 ):
     id_usuario = usuario.id
+
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
     datos_postulacion = session.scalars(consulta_postulacion).first()
     if datos_postulacion is None:
@@ -143,10 +142,10 @@ def actualizar_estado_postulacion(
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son validos")
 
     for clave, valor in datos.items():
-        setattr(consulta_postulacion, clave, valor)
+        setattr(datos_postulacion, clave, valor)
 
     session.commit()
-    return consulta_postulacion
+    return datos_postulacion
 
 @router.delete("/{id}", status_code=204)
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
