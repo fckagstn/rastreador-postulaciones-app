@@ -1,6 +1,6 @@
 from datetime import datetime, date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import create_engine, ForeignKey, Date
+from sqlalchemy import create_engine, ForeignKey, Date, CheckConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from rastreador.configuracion import db_port, db_user, db_password
 
@@ -59,6 +59,9 @@ class Modalidad(Base):
 
 class Postulacion(Base):
     __tablename__ = "postulaciones"
+    __table_args__ = (
+        CheckConstraint("sueldo_centavos > 0", name="postulaciones_sueldo_centavos_check")
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     puesto: Mapped[str]
