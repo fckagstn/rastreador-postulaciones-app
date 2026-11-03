@@ -5,6 +5,8 @@ from rastreador.main import app
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from rastreador.configuracion import db_password, db_port, db_user
+from rastreador.dependencias import obtener_sesion
+from rastreador.modelos_mapeados import Base
 
 # Crear un cliente para pruebas
 @pytest.fixture
@@ -50,3 +52,12 @@ engine_test = create_engine(f"postgresql+psycopg://{db_user}:{db_password}@local
 def obtener_session_test():
     with Session(engine_test) as session:
         yield session
+
+@pytest.fixture(autouse=True)
+def crear_db_test_y_registrar_session():
+    Base.metadata.create_all(engine_test)
+    app.dependency_overrides[obtener_sesion] = obtener_session_test
+    yield
+
+    Base.metadata.drop_all(engine_test)
+    app.dependency_overrides.clear()
