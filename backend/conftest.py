@@ -35,12 +35,12 @@ def usuario_temporal(cliente):
     cliente.post("/usuarios", json={
         "nombre": nombre,
         "apellidos": apellidos,
-        "correo": correo,
+        "correo": f"{correo}@test.com",
         "contrasena": contrasena
     })
 
     datos = {
-        "correo": correo,
+        "correo": f"{correo}@test.com",
         "contrasena": contrasena
     }
 
