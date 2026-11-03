@@ -133,8 +133,8 @@ def actualizar_estado_postulacion(
     id_usuario = usuario.id
 
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    datos_postulacion = session.scalars(consulta_postulacion).first()
-    if datos_postulacion is None:
+    la_postulacion = session.scalars(consulta_postulacion).first()
+    if la_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que buscas")
 
     nombre = estado.estado.strip().lower()
@@ -143,17 +143,17 @@ def actualizar_estado_postulacion(
     if el_estado is None:
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos para procesar la solicitud")
 
-    datos_postulacion.estado = el_estado
+    la_postulacion.estado = el_estado
 
     nuevo_historial = HistorialEstado(
         estado = el_estado,
-        postulacion = datos_postulacion,
+        postulacion = la_postulacion,
         fecha = datetime.now(timezone.utc)
     )
 
     session.add(nuevo_historial)
     session.commit()
-    return datos_postulacion
+    return la_postulacion
 
 @router.delete("/{id}", status_code=204)
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):

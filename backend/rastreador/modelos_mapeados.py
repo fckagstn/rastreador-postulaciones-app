@@ -97,7 +97,7 @@ class Postulacion(Base):
     portal: Mapped["Portal"] = relationship(back_populates="postulaciones")
     mercado: Mapped["Mercado"] = relationship(back_populates="postulaciones")
     modalidad: Mapped["Modalidad"] = relationship(back_populates="postulaciones")
-    historial: Mapped[list["HistorialEstado"]] = relationship(back_populates="postulacion")
+    historial: Mapped[list["HistorialEstado"]] = relationship(back_populates="postulacion", cascade="all, delete-orphan", passive_deletes=True)
 
 class HistorialEstado(Base):
     __tablename__ = "historial_estados"
