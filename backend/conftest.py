@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from rastreador.configuracion import db_password, db_port, db_user
 from rastreador.dependencias import obtener_sesion
-from rastreador.modelos_mapeados import Base
+from rastreador.modelos_mapeados import Base, Estado, Mercado, Modalidad
 
 # Crear un cliente para pruebas
 @pytest.fixture
@@ -56,8 +56,36 @@ def obtener_session_test():
 @pytest.fixture(autouse=True)
 def crear_db_test_y_registrar_session():
     Base.metadata.create_all(engine_test)
+
+    # Sembrar los datos de los catalogos para que no truenen las pruebas si los necesitan
+    with Session(engine_test) as session:
+        estados = [
+            Estado(nombre_estado="postulado"),
+            Estado(nombre_estado="rechazado"),
+            Estado(nombre_estado="entrevista"),
+            Estado(nombre_estado="oferta")
+        ]
+
+        mercados = [
+            Mercado(nombre="local"),
+            Mercado(nombre="nacional"),
+            Mercado(nombre="nearshore"),
+            Mercado(nombre="offshore")
+        ]
+
+        modalidades = [
+            Modalidad(nombre="presencial"),
+            Modalidad(nombre="remoto"),
+            Modalidad(nombre="híbrido")
+        ]
+
+        session.add_all(estados)
+        session.add_all(mercados)
+        session.add_all(modalidades)
+        session.commit()
+
     app.dependency_overrides[obtener_sesion] = obtener_session_test
     yield
 
-    Base.metadata.drop_all(engine_test)
     app.dependency_overrides.clear()
+    Base.metadata.drop_all(engine_test)
