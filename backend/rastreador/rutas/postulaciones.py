@@ -15,38 +15,38 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     # Buscar la empresa por nombre primero en la BD, con la empresa que dio el usuario
     empresa = postulacion.empresa.strip().lower()     # Normalizar a minusculas y eliminar residuos a los extremos del campo
     consulta_empresa = select(Empresa).where(Empresa.nombre_empresa == empresa)
-    datos_empresa = session.scalars(consulta_empresa).first()
+    la_empresa = session.scalars(consulta_empresa).first()
 
     # Si no hubo coincidencias, crear la empresa con la empresa que dio el usuario
-    if datos_empresa is None:
-        datos_empresa = Empresa(nombre_empresa = empresa)
-        session.add(datos_empresa)
+    if la_empresa is None:
+        la_empresa = Empresa(nombre_empresa = empresa)
+        session.add(la_empresa)
 
-    datos_portal = None
+    el_portal = None
 
     # Buscar el portal por nombre primero en la BD, con el portal que dio el usuario, SI ES QUE LO DIO
     if postulacion.portal is not None:
         portal = postulacion.portal.strip().lower()
         consulta_portal = select(Portal).where(Portal.nombre_portal == portal)
-        datos_portal = session.scalars(consulta_portal).first()
+        el_portal = session.scalars(consulta_portal).first()
 
         # Si no hubo coincidencias, crear el portal con el portal que dio el usuario
-        if datos_portal is None:
-            datos_portal = Portal(nombre_portal = portal)
-            session.add(datos_portal)
+        if el_portal is None:
+            el_portal = Portal(nombre_portal = portal)
+            session.add(el_portal)
             
     # Traer el estado 'postulado'
     consulta_estado = select(Estado).where(Estado.nombre_estado == "postulado")
-    datos_estado = session.scalars(consulta_estado).first()
-    if datos_estado is None:
+    el_estado = session.scalars(consulta_estado).first()
+    if el_estado is None:
         raise HTTPException(status_code=500, detail="No se ha creado el estado 'Postulado'")
 
     nueva_postulacion = Postulacion(
         puesto = postulacion.puesto,
         sueldo_centavos = postulacion.sueldo_centavos,
-        empresa = datos_empresa,               # Se pasan por medio de relationship sin usar su campo _id                  
-        estado = datos_estado,                 # Se pasan por medio de relationship sin usar su campo _id                            
-        portal = datos_portal,                 # Se pasan por medio de relationship sin usar su campo _id
+        empresa = la_empresa,               # Se pasan por medio de relationship sin usar su campo _id                  
+        estado = el_estado,                 # Se pasan por medio de relationship sin usar su campo _id                            
+        portal = el_portal,                 # Se pasan por medio de relationship sin usar su campo _id
         usuario_id = id_usuario,
         mercado_id = postulacion.mercado_id,
         modalidad_id = postulacion.modalidad_id,
@@ -54,7 +54,7 @@ def registrar_postulacion(postulacion: PostulacionEntrada, session = Depends(obt
     )
 
     nuevo_historial = HistorialEstado(
-        estado = datos_estado,                  # Se pasan por medio de relationship sin usar su campo _id
+        estado = el_estado,                  # Se pasan por medio de relationship sin usar su campo _id
         postulacion = nueva_postulacion,        # Se pasan por medio de relationship sin usar su campo _id
         fecha = datetime.now(timezone.utc)
     )
@@ -91,12 +91,12 @@ def listar_postulaciones(usuario = Depends(obtener_usuario), session = Depends(o
 def traer_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
     id_usuario = usuario.id
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    datos_postulacion = session.scalars(consulta_postulacion).first()
+    la_postulacion = session.scalars(consulta_postulacion).first()
 
-    if datos_postulacion is None:
+    if la_postulacion is None:
             raise HTTPException(status_code=404, detail="No existe la postulación que buscas")
 
-    return datos_postulacion
+    return la_postulacion
 
 @router.patch("/{id}", response_model=PostulacionSalida)
 def actualizar_parcial_postulacion(
@@ -109,8 +109,8 @@ def actualizar_parcial_postulacion(
 
     # Buscar la postulacion para evaluar si su condicion es None o se procede a actualizar
     consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    datos_postulacion = session.scalars(consulta_postulacion).first()
-    if datos_postulacion is None:
+    la_postulacion = session.scalars(consulta_postulacion).first()
+    if la_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulación que buscas")
 
     datos = postulacion.model_dump(exclude_unset=True)
@@ -118,10 +118,10 @@ def actualizar_parcial_postulacion(
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos")
 
     for clave, valor in datos.items():
-        setattr(datos_postulacion, clave, valor)
+        setattr(la_postulacion, clave, valor)
 
     session.commit()
-    return datos_postulacion
+    return la_postulacion
 
 @router.patch("/{id}/estado", response_model=PostulacionSalida)
 def actualizar_estado_postulacion(
@@ -139,14 +139,14 @@ def actualizar_estado_postulacion(
 
     nombre = estado.estado.strip().lower()
     consulta_estado = select(Estado).where(Estado.nombre_estado == nombre)
-    datos_estado = session.scalars(consulta_estado).first()
-    if datos_estado is None:
+    el_estado = session.scalars(consulta_estado).first()
+    if el_estado is None:
         raise HTTPException(status_code=422, detail="Los datos proporcionados no son válidos para procesar la solicitud")
 
-    datos_postulacion.estado = datos_estado
+    datos_postulacion.estado = el_estado
 
     nuevo_historial = HistorialEstado(
-        estado = datos_estado,
+        estado = el_estado,
         postulacion = datos_postulacion,
         fecha = datetime.now(timezone.utc)
     )
@@ -159,9 +159,9 @@ def actualizar_estado_postulacion(
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
     id_usuario = usuario.id
     consulta_postulacion  = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
-    datos_postulacion = session.scalars(consulta_postulacion).first()
-    if datos_postulacion is None:
+    la_postulacion = session.scalars(consulta_postulacion).first()
+    if la_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que deseas eliminar")
 
-    session.delete(datos_postulacion)
+    session.delete(la_postulacion)
     session.commit()

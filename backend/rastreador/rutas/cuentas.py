@@ -44,10 +44,10 @@ def crear_nuevo_usuario(usuario: UsuarioEntrada, session = Depends(obtener_sesio
 def loguearse(datos: LoginEntrada, session = Depends(obtener_sesion)):
     # Traer los datos del usuario donde el correo sea igual en la BD
     consulta = select(Usuario).where(Usuario.correo == datos.correo)
-    datos_usuario = session.scalars(consulta).first()
+    el_usuario = session.scalars(consulta).first()
 
     # Si no se encontro el usuario, usar el 'hash_senuelo' por el canal de tiempo para simular el tiempo de respuesta y cortar el programa
-    if datos_usuario is None:
+    if el_usuario is None:
         verificar_contrasena(datos.contrasena, hash_senuelo)
         raise HTTPException(
             status_code=401,
@@ -56,10 +56,10 @@ def loguearse(datos: LoginEntrada, session = Depends(obtener_sesion)):
         )
 
     # Guardar el valor True o False a la validación de contraseñas y usarlo para decidir que hacer
-    validacion = verificar_contrasena(datos.contrasena, datos_usuario.contrasena_hashed)
+    validacion = verificar_contrasena(datos.contrasena, el_usuario.contrasena_hashed)
 
     if validacion:
-        token = crear_token(datos_usuario.id)
+        token = crear_token(el_usuario.id)
         datos_login = {
             "access_token": token,
             "token_type": "bearer"
