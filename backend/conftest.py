@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from rastreador.configuracion import db_password, db_port, db_user
 
+# Crear un cliente para pruebas
 @pytest.fixture
 def cliente():
     return TestClient(app)
@@ -21,6 +22,7 @@ def token(cliente, usuario_temporal):
     token = datos_login["access_token"]
     return token
 
+# Registrar un usuario temporal para usar durante las pruebas 
 @pytest.fixture
 def usuario_temporal(cliente):
     nombre = str(uuid.uuid4())
@@ -42,6 +44,7 @@ def usuario_temporal(cliente):
 
     yield datos
 
+# Crear la conexion, se usa una BD aparte para test para evitar tocar los datos de la BD original
 engine_test = create_engine(f"postgresql+psycopg://{db_user}:{db_password}@localhost:{db_port}/rastreador_test", echo=False)
 
 def obtener_session_test():
