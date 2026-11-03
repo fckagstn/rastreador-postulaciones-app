@@ -60,7 +60,7 @@ class Modalidad(Base):
 class Postulacion(Base):
     __tablename__ = "postulaciones"
     __table_args__ = (
-        CheckConstraint("sueldo_centavos > 0", name="postulaciones_sueldo_centavos_check")
+        CheckConstraint("sueldo_centavos > 0", name="postulaciones_sueldo_centavos_check"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
