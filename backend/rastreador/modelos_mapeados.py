@@ -97,7 +97,7 @@ class Postulacion(Base):
     portal: Mapped["Portal"] = relationship(back_populates="postulaciones")
     mercado: Mapped["Mercado"] = relationship(back_populates="postulaciones")
     modalidad: Mapped["Modalidad"] = relationship(back_populates="postulaciones")
-    historial: Mapped[list["HistorialEstado"]] = relationship(back_populates="postulacion", cascade="all, delete-orphan", passive_deletes=True)
+    historial: Mapped[list["HistorialEstado"]] = relationship(back_populates="postulacion", cascade="all, delete-orphan", passive_deletes=True)     # passive_deletes para indicarle al ORM que la base se encarga del borrado, cascade para que borre las filas hijas junto al padre
 
 class HistorialEstado(Base):
     __tablename__ = "historial_estados"
