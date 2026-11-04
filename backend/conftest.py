@@ -9,7 +9,7 @@ from rastreador.dependencias import obtener_sesion
 from rastreador.modelos_mapeados import Base, Estado, Mercado, Modalidad
 
 # Crear un cliente para pruebas
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def cliente():
     return TestClient(app)
 
