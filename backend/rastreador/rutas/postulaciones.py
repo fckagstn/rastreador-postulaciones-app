@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
-from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada
+from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada, HistorialSalida
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
@@ -158,10 +158,23 @@ def actualizar_estado_postulacion(
 @router.delete("/{id}", status_code=204)
 def borrar_postulacion(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
     id_usuario = usuario.id
-    consulta_postulacion  = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
+    consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
     la_postulacion = session.scalars(consulta_postulacion).first()
     if la_postulacion is None:
         raise HTTPException(status_code=404, detail="No existe la postulacion que deseas eliminar")
 
     session.delete(la_postulacion)
     session.commit()
+
+@router.get("/{id}/historial", response_model=list[HistorialSalida])
+def traer_historial(id: int = Path(ge=1), usuario = Depends(obtener_usuario), session = Depends(obtener_sesion)):
+    id_usuario = usuario.id
+
+    consulta_postulacion = select(Postulacion).where(Postulacion.id == id, Postulacion.usuario_id == id_usuario)
+    la_postulacion = session.scalars(consulta_postulacion).first()
+    if la_postulacion is None:
+        raise HTTPException(status_code=404, detail="No existe la postulacion que buscas")
+    
+    consulta_historial = select(HistorialEstado).where(HistorialEstado.postulacion_id == id).order_by(HistorialEstado.fecha)
+    el_historial = session.scalars(consulta_historial).all()
+    return el_historial
