@@ -86,5 +86,6 @@ class LoginEntrada(BaseModel):
 # =========HISTORIAL SALIDA=========
 class HistorialSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: int
     estado: EstadoSalida
     fecha: datetime
