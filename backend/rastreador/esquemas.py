@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
-from datetime import date
+from datetime import date, datetime
 
 # =========USUARIOS ENTRADA Y SALIDA=============
 class UsuarioEntrada(BaseModel):
@@ -82,4 +82,9 @@ class EstadoSalida(BaseModel):
 class LoginEntrada(BaseModel):
     correo: EmailStr
     contrasena: str
-    
+
+# =========HISTORIAL SALIDA=========
+class HistorialSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    estado: EstadoSalida
+    fecha: datetime
