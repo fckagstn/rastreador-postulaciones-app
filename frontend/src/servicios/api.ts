@@ -1,4 +1,4 @@
-import type { UsuarioEntrada, UsuarioSalida } from "../tipos/api";
+import type { UsuarioEntrada, UsuarioSalida, LoginEntrada} from "../tipos/api";
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -18,3 +18,18 @@ export async function registrarUsuario(usuario: UsuarioEntrada): Promise<Usuario
     return respuesta.json()
 }
 
+export async function iniciarSesion(datos: LoginEntrada): Promise<object> {
+    const respuesta = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(datos),
+    });
+
+    if (!respuesta.ok){
+        const cuerpo = await respuesta.json()
+        throw new Error(cuerpo.detail)
+    }
+    return respuesta.json()
+}
