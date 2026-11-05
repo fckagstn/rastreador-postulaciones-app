@@ -33,3 +33,18 @@ export async function iniciarSesion(datos: LoginEntrada): Promise<object> {
     }
     return respuesta.json()
 }
+
+export async function obtenerPerfil(token): Promise<UsuarioSalida> {
+    const respuesta = await fetch(`${apiUrl}/perfil`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+    });
+    if (!respuesta.ok){
+        const cuerpo = await respuesta.json()
+        throw new Error(cuerpo.detail);
+    }
+    return respuesta.json()
+}
+
