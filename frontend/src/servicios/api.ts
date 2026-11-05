@@ -1,4 +1,4 @@
-import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida } from "../tipos/api";
+import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, TokenSalida } from "../tipos/api";
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -18,7 +18,7 @@ export async function registrarUsuario(usuario: UsuarioEntrada): Promise<Usuario
     return respuesta.json()
 }
 
-export async function iniciarSesion(datos: LoginEntrada): Promise<object> {
+export async function iniciarSesion(datos: LoginEntrada): Promise<TokenSalida> {
     const respuesta = await fetch(`${apiUrl}/login`, {
         method: "POST",
         headers: {
@@ -34,7 +34,7 @@ export async function iniciarSesion(datos: LoginEntrada): Promise<object> {
     return respuesta.json()
 }
 
-export async function obtenerPerfil(token): Promise<UsuarioSalida> {
+export async function obtenerPerfil(token: string): Promise<UsuarioSalida> {
     const respuesta = await fetch(`${apiUrl}/perfil`, {
         method: "GET",
         headers: {
@@ -48,7 +48,7 @@ export async function obtenerPerfil(token): Promise<UsuarioSalida> {
     return respuesta.json()
 }
 
-export async function listarPostulaciones(token): Promise<[PostulacionSalida]> {
+export async function listarPostulaciones(token: string): Promise<PostulacionSalida[]> {
     const respuesta = await fetch(`${apiUrl}/postulaciones`, {
         method: "GET",
         headers: {
