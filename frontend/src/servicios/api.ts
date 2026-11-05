@@ -7,7 +7,7 @@ function cabecera(token: string){
     return cabecera
 }
 
-async function validarError(respuesta: Response){
+async function verificarRespuesta(respuesta: Response){
     if (!respuesta.ok){
         const cuerpo = await respuesta.json()
         throw new Error(cuerpo.detail)
@@ -23,7 +23,7 @@ export async function registrarUsuario(usuario: UsuarioEntrada): Promise<Usuario
         body: JSON.stringify(usuario),
     });
 
-    await validarError(respuesta)
+    await verificarRespuesta(respuesta)
     return respuesta.json()
 }
 
@@ -36,7 +36,7 @@ export async function iniciarSesion(datos: LoginEntrada): Promise<TokenSalida> {
         body: JSON.stringify(datos),
     });
 
-    await validarError(respuesta)
+    await verificarRespuesta(respuesta)
     return respuesta.json()
 }
 
@@ -45,7 +45,7 @@ export async function obtenerPerfil(token: string): Promise<UsuarioSalida> {
         method: "GET",
         headers: cabecera(token),
     });
-    await validarError(respuesta)
+    await verificarRespuesta(respuesta)
     return respuesta.json()
 }
 
@@ -54,6 +54,6 @@ export async function listarPostulaciones(token: string): Promise<PostulacionSal
         method: "GET",
         headers: cabecera(token),
     });
-    await validarError(respuesta)
+    await verificarRespuesta(respuesta)
     return respuesta.json()
 }
