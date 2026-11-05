@@ -9,6 +9,7 @@ export interface UsuarioEntrada{
 export interface UsuarioSalida{
     id: number;
     nombre: string;
+    apellidos: string;
     correo: string;
 }
 // =========PORTALES ENTRADA Y SALIDA============
@@ -45,7 +46,7 @@ export interface PostulacionEntrada{
     portal: string | null;
     mercado_id: number | null;
     modalidad_id: number | null;
-    fecha_postulacion: Date;
+    fecha_postulacion: string;
 }
 
 export interface PostulacionSalida{
@@ -54,10 +55,10 @@ export interface PostulacionSalida{
     sueldo_centavos: number | null;
     empresa: EmpresaSalida;
     estado: EstadoSalida;
-    portal: PortalSalida;
+    portal: PortalSalida | null;
     mercado: MercadoSalida | null;
     modalidad: ModalidadSalida | null;
-    fecha_postulacion: Date
+    fecha_postulacion: string;
 }
 
 // =============ESTADO ENTRADA Y SALIDA===============
@@ -80,5 +81,5 @@ export interface LoginEntrada{
 export interface HistorialSalida{
     id: number;
     estado: EstadoSalida;
-    fecha: Date;
+    fecha: string;
 }
