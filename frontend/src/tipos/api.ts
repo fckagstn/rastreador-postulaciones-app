@@ -38,7 +38,7 @@ export interface ModalidadSalida{
     nombre: string;
 }
 
-// # =========POSTULACIONES ENTRADA ,SALIDA==========
+// # =========POSTULACIONES ENTRADA ,SALIDA Y PARCHE==========
 export interface PostulacionEntrada{
     puesto: string;
     sueldo_centavos: number | null;
@@ -59,6 +59,14 @@ export interface PostulacionSalida{
     mercado: MercadoSalida | null;
     modalidad: ModalidadSalida | null;
     fecha_postulacion: string;
+}
+
+export interface PostulacionParche{
+    puesto?: string;
+    sueldo_centavos?: number | null;
+    mercado_id?: number | null;
+    modalidad_id?: number | null;
+    fecha_postulacion?: string | null;
 }
 
 // =============ESTADO ENTRADA Y SALIDA===============
