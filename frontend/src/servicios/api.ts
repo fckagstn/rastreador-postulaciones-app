@@ -1,4 +1,4 @@
-import type { UsuarioEntrada, UsuarioSalida, LoginEntrada} from "../tipos/api";
+import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida } from "../tipos/api";
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -48,3 +48,16 @@ export async function obtenerPerfil(token): Promise<UsuarioSalida> {
     return respuesta.json()
 }
 
+export async function listarPostulaciones(token): Promise<[PostulacionSalida]> {
+    const respuesta = await fetch(`${apiUrl}/postulaciones`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+    });
+    if (!respuesta.ok){
+        const cuerpo = await respuesta.json()
+        throw new Error(cuerpo.detail)
+    }
+    return respuesta.json()
+}
