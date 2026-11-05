@@ -2,6 +2,18 @@ import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, To
 
 const apiUrl = import.meta.env.VITE_API_URL
 
+function cabecera(token: string){
+    const cabecera = { "Authorization": "Bearer " + token }
+    return cabecera
+}
+
+async function validarError(respuesta: Response){
+    if (!respuesta.ok){
+        const cuerpo = await respuesta.json()
+        throw new Error(cuerpo.detail)
+    }
+}
+
 export async function registrarUsuario(usuario: UsuarioEntrada): Promise<UsuarioSalida> {
     const respuesta = await fetch(`${apiUrl}/usuarios`, {
         method: "POST",
@@ -11,10 +23,7 @@ export async function registrarUsuario(usuario: UsuarioEntrada): Promise<Usuario
         body: JSON.stringify(usuario),
     });
 
-    if (!respuesta.ok){
-        const cuerpo = await respuesta.json();
-        throw new Error(cuerpo.detail);
-    }
+    await validarError(respuesta)
     return respuesta.json()
 }
 
@@ -27,37 +36,24 @@ export async function iniciarSesion(datos: LoginEntrada): Promise<TokenSalida> {
         body: JSON.stringify(datos),
     });
 
-    if (!respuesta.ok){
-        const cuerpo = await respuesta.json()
-        throw new Error(cuerpo.detail)
-    }
+    await validarError(respuesta)
     return respuesta.json()
 }
 
 export async function obtenerPerfil(token: string): Promise<UsuarioSalida> {
     const respuesta = await fetch(`${apiUrl}/perfil`, {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer " + token
-        },
+        headers: cabecera(token),
     });
-    if (!respuesta.ok){
-        const cuerpo = await respuesta.json()
-        throw new Error(cuerpo.detail);
-    }
+    await validarError(respuesta)
     return respuesta.json()
 }
 
 export async function listarPostulaciones(token: string): Promise<PostulacionSalida[]> {
     const respuesta = await fetch(`${apiUrl}/postulaciones`, {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer " + token
-        },
+        headers: cabecera(token),
     });
-    if (!respuesta.ok){
-        const cuerpo = await respuesta.json()
-        throw new Error(cuerpo.detail)
-    }
+    await validarError(respuesta)
     return respuesta.json()
 }
