@@ -91,3 +91,9 @@ export interface HistorialSalida{
     estado: EstadoSalida;
     fecha: string;
 }
+
+// ==========TOKEN SALIDA==============
+export interface TokenSalida{
+    access_token: string;
+    token_type: string;
+}
