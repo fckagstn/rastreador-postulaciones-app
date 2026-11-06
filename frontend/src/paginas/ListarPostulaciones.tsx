@@ -39,7 +39,7 @@ function ListarPostulaciones({ token, removerToken }: Props){
             {cargando && <p>Cargando postulaciones...</p>}
             {error && <p>Ocurrió un error: { error }</p>}
             {postulaciones.length > 0 ? postulaciones.map(postulacion => <TarjetaPostulacion key={postulacion.id} postulacion={postulacion}/>) : <p>No tienes postulaciones registradas</p>}
-            <button onClick={removerToken}>Cerrar session</button>
+            <button onClick={removerToken}>Cerrar sesión</button>
         </div>
     )
 }
