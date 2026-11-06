@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Login from "./paginas/Login"
+import ListarPostulaciones from "./paginas/ListarPostulaciones"
 
 function App() {
 
@@ -11,7 +12,7 @@ function App() {
 
   return (
     <>
-    {token ? <p>Sesión iniciada con éxito</p>: <Login alIniciarSesion={guardarToken}/>}
+    {token ? <ListarPostulaciones token={token}/>: <Login alIniciarSesion={guardarToken}/>}
     </>
   )
 }
