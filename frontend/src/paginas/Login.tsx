@@ -14,6 +14,38 @@ function Login({ alIniciarSesion }: Props){
     const [correo, setCorreo] = useState("")
     const [contrasena, setContrasena] = useState("")
 
+    async function manejarLogin() {
+        const listaAviso: string[] = []
+
+        if (!correo) { listaAviso.push("Correo")}
+        if (!contrasena) { listaAviso.push("Contraseña")}
+        if (listaAviso.length > 0){
+            setAviso("Llena los siguientes campos: " + listaAviso.join(', '))
+            return
+        }
+
+        const datosLogin = {
+            correo: correo,
+            contrasena: contrasena
+        }
+
+        try {
+            setCargando(true)
+            const respuesta = await iniciarSesion(datosLogin)
+            alIniciarSesion(respuesta.access_token)
+        }
+        catch (error) {
+            if (error instanceof Error){
+                setError(error.message);
+            } else {
+                setError("Ocurrió un error inesperado")
+            }
+        }
+        finally {
+            setCargando(false)
+        }
+    }
+
     return (
         <div>
             <input 
@@ -32,40 +64,8 @@ function Login({ alIniciarSesion }: Props){
             {cargando && <p>Espera un momento...</p>}
             {error && <p>Ocurrió un error: {error}</p>}
 
-            <button onClick={() => {
-                const listaAviso: string[] = []
-
-                if (!correo) { listaAviso.push("Correo")}
-                if (!contrasena) { listaAviso.push("Contraseña")}
-                if (listaAviso.length > 0){
-                    setAviso("Llena los siguientes campos: " + listaAviso.join(', '))
-                    return
-                }
-
-                const datosLogin = {
-                    correo: correo,
-                    contrasena: contrasena
-                }
-
-                async function login() {
-                    try {
-                        setCargando(true)
-                        const respuesta = await iniciarSesion(datosLogin)
-                        alIniciarSesion(respuesta.access_token)
-                    }
-                    catch (error) {
-                        if (error instanceof Error){
-                            setError(error.message);
-                        } else {
-                            setError("Ocurrió un error inesperado")
-                        }
-                    }
-                    finally {
-                        setCargando(false)
-                    }
-                }
-                login()
-            }}>Iniciar sesión</button>
+            <button onClick={manejarLogin}>Iniciar sesión</button>
+            
         </div>
     )
 
