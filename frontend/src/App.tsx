@@ -1,8 +1,17 @@
+import { useState } from "react"
+import Login from "./paginas/Login"
+
 function App() {
+
+  const [token, setToken] = useState<string | null>(null)
+
+  function guardarToken(token: string){
+    setToken(token)
+  }
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-blue-600">Hola</h1>
+    {token ? <p>Sesión iniciada con éxito</p>: <Login alIniciarSesion={guardarToken}/>}
     </>
   )
 }
