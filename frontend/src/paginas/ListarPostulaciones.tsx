@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { PostulacionSalida } from "../tipos/api";
 import { listarPostulaciones } from "../servicios/api";
+import TarjetaPostulacion from "../componentes/TarjetaPostulacion";
 
 interface Props{
     token: string;
@@ -36,7 +37,7 @@ function ListarPostulaciones({ token }: Props){
         <div>
             {cargando && <p>Cargando postulaciones...</p>}
             {error && <p>Ocurrió un error: { error }</p>}
-            {postulaciones && postulaciones.map(dato => <h3 key={dato.id}>{dato.puesto}</h3>)}
+            {postulaciones.length > 0 ? postulaciones.map(postulacion => <TarjetaPostulacion postulacion={postulacion}/>) : <p>No tienes postulaciones registradas</p>}
         </div>
     )
 }
