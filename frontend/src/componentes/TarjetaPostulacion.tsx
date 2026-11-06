@@ -7,7 +7,7 @@ interface Props {
 function TarjetaPostulacion({ postulacion }: Props){
 
     return (
-        <div key={postulacion.id}>
+        <div>
             <h3>{postulacion.puesto}</h3>
             {postulacion.sueldo_centavos ? <p>{postulacion.sueldo_centavos / 100.0}</p>: <p>No hay sueldo registrado para esta postulación</p>}
             <p>Empresa: {postulacion.empresa.nombre_empresa}</p>

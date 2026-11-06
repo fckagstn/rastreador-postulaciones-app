@@ -37,7 +37,7 @@ function ListarPostulaciones({ token }: Props){
         <div>
             {cargando && <p>Cargando postulaciones...</p>}
             {error && <p>Ocurrió un error: { error }</p>}
-            {postulaciones.length > 0 ? postulaciones.map(postulacion => <TarjetaPostulacion postulacion={postulacion}/>) : <p>No tienes postulaciones registradas</p>}
+            {postulaciones.length > 0 ? postulaciones.map(postulacion => <TarjetaPostulacion key={postulacion.id} postulacion={postulacion}/>) : <p>No tienes postulaciones registradas</p>}
         </div>
     )
 }
