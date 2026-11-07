@@ -9,7 +9,6 @@ variables_obligatorias = {
     "DURACION_TOKEN": os.getenv("DURACION_TOKEN"),
     "FRONTEND_URL": os.getenv("FRONTEND_URL"),
     "DATABASE_URL": os.getenv("DATABASE_URL"),
-    "DATABASE_URL_TEST": os.getenv("DATABASE_URL_TEST")
 }
 
 # Comprension que mete el nombre de la variable faltante en caso de que no haya valor en el diccionario
