@@ -9,7 +9,7 @@ from rastreador.dependencias import obtener_sesion
 from rastreador.modelos_mapeados import Base, Estado, Mercado, Modalidad
 
 if not database_url_test: 
-    raise RuntimeError(f"Falta la conexión para la BD de pruebas")
+    raise RuntimeError("Falta la conexión para la BD de pruebas")
 
 # Crear un cliente para pruebas
 @pytest.fixture()
