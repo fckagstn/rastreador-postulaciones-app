@@ -2,10 +2,10 @@ from datetime import datetime, date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import create_engine, ForeignKey, Date, CheckConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP
-from rastreador.configuracion import db_port, db_user, db_password
+from rastreador.configuracion import database_url
 
 # Engine que apunta a la BD rastreador
-engine = create_engine(f"postgresql+psycopg://{db_user}:{db_password}@localhost:{db_port}/rastreador", echo=False)
+engine = create_engine(database_url, echo=False)
 
 class Base(DeclarativeBase):
     pass
