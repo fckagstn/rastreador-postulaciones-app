@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-origins = frontend_url.split(",")
-lista_origins = [origen.strip() for origen in origins]
+origins_crudos = frontend_url.split(",")
+origins = [origen.strip() for origen in origins_crudos]
 
 @app.exception_handler(RequestValidationError)
 def manejador_validaciones(request, exc):       # Parametros: 'request' lo que manda el cliente, 'exc' el error que registra la app
@@ -50,7 +50,7 @@ def manejador_error_servidor(request, exc):
 # Registrar el Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=lista_origins,
+    allow_origins=origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
