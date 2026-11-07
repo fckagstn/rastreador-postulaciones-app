@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse                   # Para responder en formato JSON a cualquier error
 from fastapi.middleware.cors import CORSMiddleware           # Para habilitar el intercambio de recursos de origen cruzado   
+from rastreador.configuracion import frontend_url
 import logging                                               # Para registrar eventos del programa
 import uuid           
 import rastreador.rutas.cuentas as cuentas  
@@ -17,9 +18,8 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173",        # URL del Frontend
-]
+origins = frontend_url.split(",")
+lista_origins = [origen.strip() for origen in origins]
 
 @app.exception_handler(RequestValidationError)
 def manejador_validaciones(request, exc):       # Parametros: 'request' lo que manda el cliente, 'exc' el error que registra la app
@@ -50,7 +50,7 @@ def manejador_error_servidor(request, exc):
 # Registrar el Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=lista_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
