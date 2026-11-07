@@ -4,12 +4,12 @@ from fastapi.testclient import TestClient
 from rastreador.main import app
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from rastreador.configuracion import db_password, db_port, db_user
+from rastreador.configuracion import database_url_test
 from rastreador.dependencias import obtener_sesion
 from rastreador.modelos_mapeados import Base, Estado, Mercado, Modalidad
 
 # Crear un cliente para pruebas
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def cliente():
     return TestClient(app)
 
@@ -47,7 +47,7 @@ def usuario_temporal(cliente):
     yield datos
 
 # Crear la conexion, se usa una BD aparte para test para evitar tocar los datos de la BD original
-engine_test = create_engine(f"postgresql+psycopg://{db_user}:{db_password}@localhost:{db_port}/rastreador_test", echo=False)
+engine_test = create_engine(database_url_test, echo=False)
 
 def obtener_session_test():
     with Session(engine_test) as session:
