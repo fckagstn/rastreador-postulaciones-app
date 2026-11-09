@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
-from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada, HistorialSalida, MercadoSalida
+from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada, HistorialSalida, MercadoSalida, EstadoSalida
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado, Mercado
@@ -184,3 +184,9 @@ def traer_mercados(session = Depends(obtener_sesion)):
     consulta_mercados = select(Mercado)
     los_mercados = session.scalars(consulta_mercados).all()
     return los_mercados
+
+@router.get("/estados", response_model=list[EstadoSalida])
+def traer_estados(session = Depends(obtener_sesion)):
+    consulta_estados = select(Estado)
+    los_estados = session.scalars(consulta_estados).all()
+    return los_estados
