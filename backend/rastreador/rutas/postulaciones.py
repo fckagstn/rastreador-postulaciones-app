@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from rastreador.dependencias import obtener_sesion, obtener_usuario
-from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada, HistorialSalida
+from rastreador.esquemas import PostulacionEntrada, PostulacionSalida, PostulacionParche, EstadoEntrada, HistorialSalida, MercadoSalida
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado
+from rastreador.modelos_mapeados import Empresa, Postulacion, Portal, HistorialEstado, Estado, Mercado
 from datetime import datetime, timezone
 
 router = APIRouter(prefix="/postulaciones")
@@ -178,3 +178,9 @@ def traer_historial(id: int = Path(ge=1), usuario = Depends(obtener_usuario), se
     consulta_historial = select(HistorialEstado).where(HistorialEstado.postulacion_id == id).order_by(HistorialEstado.fecha)
     el_historial = session.scalars(consulta_historial).all()
     return el_historial
+
+@router.get("/mercados", response_model=list[MercadoSalida])
+def traer_mercados(session = Depends(obtener_sesion)):
+    consulta_mercados = select(Mercado)
+    los_mercados = session.scalars(consulta_mercados).all()
+    return los_mercados
