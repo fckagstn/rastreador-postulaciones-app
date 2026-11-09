@@ -3,9 +3,10 @@ import { iniciarSesion, registrarUsuario } from "../servicios/api"
 
 interface Props{
     alIniciarSesion: (token: string) => void;
+    irALogin: () => void;
 }
 
-function Registro({ alIniciarSesion }: Props) {
+function Registro({ alIniciarSesion, irALogin }: Props) {
 
     const [cargando, setCargando] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -90,7 +91,7 @@ function Registro({ alIniciarSesion }: Props) {
             {error && <p>Ocurrió un error: {error}</p>}
 
             <button onClick={manejarRegistro}>Registrarse</button>
-
+            <button onClick={irALogin}>¿Ya tienes cuenta? Inicia sesión</button>
             
         </div>
     )
