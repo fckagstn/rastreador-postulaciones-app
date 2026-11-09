@@ -65,3 +65,11 @@ export async function listarMercados() {
     await verificarRespuesta(respuesta)
     return respuesta.json()
 }
+
+export async function listarEstados() {
+    const respuesta = await fetch(`${apiUrl}/postulaciones/estados`, {
+        method: "GET",
+    });
+    await verificarRespuesta(respuesta)
+    return respuesta.json()
+}
