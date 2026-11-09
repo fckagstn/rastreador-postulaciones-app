@@ -1,4 +1,4 @@
-import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, TokenSalida, MercadoSalida } from "../tipos/api";
+import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, TokenSalida, PostulacionEntrada } from "../tipos/api";
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -69,6 +69,16 @@ export async function listarMercados() {
 export async function listarEstados() {
     const respuesta = await fetch(`${apiUrl}/postulaciones/estados`, {
         method: "GET",
+    });
+    await verificarRespuesta(respuesta)
+    return respuesta.json()
+}
+
+export async function crearPostulacion(token: string, postulacion : PostulacionEntrada): Promise<PostulacionSalida> {
+    const respuesta = await fetch(`${apiUrl}/postulaciones`, {
+        method: "POST",
+        headers: cabecera(token),
+        body: JSON.stringify(postulacion),
     });
     await verificarRespuesta(respuesta)
     return respuesta.json()
