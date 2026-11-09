@@ -19,8 +19,8 @@ function Registro({ alIniciarSesion }: Props) {
     async function manejarRegistro() {
         const listaAviso: string[] = []
 
-        if (!nombre) { listaAviso.push("Correo")}
-        if (!apellidos) { listaAviso.push("Correo")}
+        if (!nombre) { listaAviso.push("Nombre")}
+        if (!apellidos) { listaAviso.push("Apellidos")}
         if (!correo) { listaAviso.push("Correo")}
         if (!contrasena) { listaAviso.push("Contraseña")}
         if (listaAviso.length > 0){
