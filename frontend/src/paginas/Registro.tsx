@@ -44,8 +44,8 @@ function Registro({ alIniciarSesion }: Props) {
                 contrasena: contrasena,
             }
 
-            const respuesta_login = await iniciarSesion(datosLogin)
-            alIniciarSesion(respuesta_login.access_token)
+            const respuestaLogin = await iniciarSesion(datosLogin)
+            alIniciarSesion(respuestaLogin.access_token)
         }
         catch (error) {
             if (error instanceof Error) {
