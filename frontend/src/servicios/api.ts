@@ -1,4 +1,4 @@
-import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, TokenSalida, PostulacionEntrada } from "../tipos/api";
+import type { UsuarioEntrada, UsuarioSalida, LoginEntrada, PostulacionSalida, TokenSalida, PostulacionEntrada, MercadoSalida, ModalidadSalida, EstadoSalida } from "../tipos/api";
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -58,7 +58,7 @@ export async function listarPostulaciones(token: string): Promise<PostulacionSal
     return respuesta.json()
 }
 
-export async function listarMercados() {
+export async function listarMercados(): Promise<MercadoSalida[]> {
     const respuesta = await fetch(`${apiUrl}/postulaciones/mercados`, {
         method: "GET",
     });
@@ -66,8 +66,16 @@ export async function listarMercados() {
     return respuesta.json()
 }
 
-export async function listarEstados() {
+export async function listarEstados(): Promise<EstadoSalida[]> {
     const respuesta = await fetch(`${apiUrl}/postulaciones/estados`, {
+        method: "GET",
+    });
+    await verificarRespuesta(respuesta)
+    return respuesta.json()
+}
+
+export async function listarModalidades(): Promise<ModalidadSalida[]> {
+    const respuesta = await fetch(`${apiUrl}/postulaciones/modalidades`, {
         method: "GET",
     });
     await verificarRespuesta(respuesta)
