@@ -59,7 +59,7 @@ export async function listarPostulaciones(token: string): Promise<PostulacionSal
 }
 
 export async function listarMercados(): Promise<MercadoSalida[]> {
-    const respuesta = await fetch(`${apiUrl}/postulaciones/mercados`, {
+    const respuesta = await fetch(`${apiUrl}/mercados`, {
         method: "GET",
     });
     await verificarRespuesta(respuesta)
@@ -67,7 +67,7 @@ export async function listarMercados(): Promise<MercadoSalida[]> {
 }
 
 export async function listarEstados(): Promise<EstadoSalida[]> {
-    const respuesta = await fetch(`${apiUrl}/postulaciones/estados`, {
+    const respuesta = await fetch(`${apiUrl}/estados`, {
         method: "GET",
     });
     await verificarRespuesta(respuesta)
@@ -75,7 +75,7 @@ export async function listarEstados(): Promise<EstadoSalida[]> {
 }
 
 export async function listarModalidades(): Promise<ModalidadSalida[]> {
-    const respuesta = await fetch(`${apiUrl}/postulaciones/modalidades`, {
+    const respuesta = await fetch(`${apiUrl}/modalidades`, {
         method: "GET",
     });
     await verificarRespuesta(respuesta)
