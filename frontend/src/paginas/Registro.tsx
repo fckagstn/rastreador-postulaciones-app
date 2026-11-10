@@ -3,7 +3,6 @@ import { iniciarSesion, registrarUsuario } from "../servicios/api"
 
 interface Props{
     alIniciarSesion: (token: string) => void;
-    irALogin: () => void;
 }
 
 function Registro({ alIniciarSesion }: Props) {
