@@ -6,9 +6,10 @@ import TarjetaPostulacion from "../componentes/TarjetaPostulacion";
 interface Props{
     token: string;
     removerToken: () => void;
+    contador: number;
 }
 
-function ListarPostulaciones({ token, removerToken }: Props){
+function ListarPostulaciones({ token, removerToken, contador }: Props){
 
     const [postulaciones, setPostulaciones] = useState<PostulacionSalida[]>([])
     const [error, setError] = useState<string | null>(null)
@@ -32,7 +33,7 @@ function ListarPostulaciones({ token, removerToken }: Props){
                 setCargando(false)
             }
         } manejarPostulaciones()
-    }, [token])
+    }, [token, contador])
 
     return (
         <div>

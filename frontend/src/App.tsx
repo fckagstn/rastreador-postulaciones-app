@@ -21,13 +21,13 @@ function App() {
   }
 
   function subirContador() {
-    setContador(contador + 1)
+    setContador((valorAnterior) => valorAnterior + 1)
   }
 
   return (
     <>
     {token 
-      ? <ListarPostulaciones token={token} removerToken={removerToken}/>
+      ? <ListarPostulaciones token={token} removerToken={removerToken} contador={contador}/>
       : mostrarRegistro 
       ? <Registro alIniciarSesion={guardarToken} irALogin={() => setMostrarRegistro(false)}/>
       : <Login alIniciarSesion={guardarToken} irARegistro={() => setMostrarRegistro(true)}/>}
