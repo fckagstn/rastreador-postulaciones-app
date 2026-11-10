@@ -5,11 +5,10 @@ import TarjetaPostulacion from "../componentes/TarjetaPostulacion";
 
 interface Props{
     token: string;
-    removerToken: () => void;
     contador: number;
 }
 
-function ListarPostulaciones({ token, removerToken, contador }: Props){
+function ListarPostulaciones({ token, contador }: Props){
 
     const [postulaciones, setPostulaciones] = useState<PostulacionSalida[]>([])
     const [error, setError] = useState<string | null>(null)
@@ -40,7 +39,6 @@ function ListarPostulaciones({ token, removerToken, contador }: Props){
             {cargando && <p>Cargando postulaciones...</p>}
             {error && <p>Ocurrió un error: { error }</p>}
             {postulaciones.length > 0 ? postulaciones.map(postulacion => <TarjetaPostulacion key={postulacion.id} postulacion={postulacion}/>) : <p>No tienes postulaciones registradas</p>}
-            <button onClick={removerToken}>Cerrar sesión</button>
         </div>
     )
 }
