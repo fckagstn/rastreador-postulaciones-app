@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react"
 import { crearPostulacion, listarMercados, listarModalidades } from "../servicios/api"
-import { type MercadoSalida, type ModalidadSalida } from "../tipos/api";
+import { type MercadoSalida, type ModalidadSalida } from "../tipos/api"
 
 interface Props {
     token: string;
@@ -13,6 +14,7 @@ function NuevaPostulacion({ token, subirContador }: Props){
     const [cargando, setCargando] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [aviso, setAviso] = useState("")
+    const [exito, setExito] = useState("")
 
     // CATALOGOS
     const [mercados, setMercados] = useState<MercadoSalida[]>([])
@@ -28,11 +30,17 @@ function NuevaPostulacion({ token, subirContador }: Props){
     const [fechaPostulacion, setFechaPostulacion] = useState("")
 
     async function manejarRegistro() {
+
+        setError(null)
+        setAviso("")
+        setExito("")
+
         const listaAviso: string[] = []
 
         if (!puesto) { listaAviso.push("Puesto")}
         if (!empresa) { listaAviso.push("Empresa")}
         if (!fechaPostulacion) { listaAviso.push("Fecha de postulación")}
+
         if (listaAviso.length > 0){
             setAviso("Llena los siguientes campos: " + listaAviso.join(', '))
             return
@@ -42,25 +50,38 @@ function NuevaPostulacion({ token, subirContador }: Props){
         const sueldoCentavos = Math.round(sueldoNumerico * 100)
 
         const datosPostulacion = {
-          puesto: puesto,
-          sueldo_centavos: sueldoNumerico > 0 ? sueldoCentavos : null,
-          empresa: empresa,
-          portal: portal || null,
-          mercado_id: mercadoId ? parseInt(mercadoId) : null,
-          modalidad_id: modalidadId ? parseInt(modalidadId) : null,
-          fecha_postulacion: fechaPostulacion
+            puesto: puesto,
+            sueldo_centavos: sueldoNumerico > 0 ? sueldoCentavos : null,
+            empresa: empresa,
+            portal: portal || null,
+            mercado_id: mercadoId ? parseInt(mercadoId) : null,
+            modalidad_id: modalidadId ? parseInt(modalidadId) : null,
+            fecha_postulacion: fechaPostulacion
         };
-        
+
         try {
             setCargando(true)
+
             await crearPostulacion(token, datosPostulacion)
+
             subirContador()
+
+            setExito("Postulación registrada correctamente")
+            
+            setPuesto("")
+            setSueldo("")
+            setEmpresa("")
+            setPortal("")
+            setMercadoId("")
+            setModalidadId("")
+            setFechaPostulacion("")
+
         }
         catch (error) {
             if (error instanceof Error){
                 setError(error.message)
             } else {
-                setError("Ocurrio un error inesperado")
+                setError("Ocurrió un error inesperado")
             }
         }
         finally {
@@ -74,6 +95,7 @@ function NuevaPostulacion({ token, subirContador }: Props){
             try{
                 const datosMercados = await listarMercados()
                 setMercados(datosMercados)
+
                 const datosModalidades = await listarModalidades()
                 setModalidades(datosModalidades)
             }
@@ -85,38 +107,39 @@ function NuevaPostulacion({ token, subirContador }: Props){
                 }
             }
         }
+
         traerCatalogos()
     }, [])
 
     return(
         <div>
             {/* PUESTO */}
-            <input 
+            <input
                 type="text"
                 value={puesto}
                 onChange={evento => setPuesto(evento.target.value)}
                 placeholder="Nombre del puesto de la vacante"/>
 
             {/* SUELDO */}
-            <input 
+            <input
                 type="number"
                 value={sueldo}
                 onChange={evento => setSueldo(evento.target.value)}
                 placeholder="Sueldo de la vacante (opcional)"/>
 
             {/* EMPRESA */}
-            <input 
+            <input
                 type="text"
                 value={empresa}
                 onChange={evento => setEmpresa(evento.target.value)}
-                placeholder="Empresa que publico la vacante"/>
+                placeholder="Empresa que publicó la vacante"/>
 
             {/* PORTAL */}
-            <input 
+            <input
                 type="text"
                 value={portal}
                 onChange={evento => setPortal(evento.target.value)}
-                placeholder="Portal donde salio la vacante (opcional)"/>
+                placeholder="Portal donde salió la vacante (opcional)"/>
 
             {/* LISTA DE MERCADOS */}
             <select value={mercadoId} onChange={evento => setMercadoId(evento.target.value)}>
@@ -133,20 +156,23 @@ function NuevaPostulacion({ token, subirContador }: Props){
                     <option key={modalidad.id} value={modalidad.id}>{modalidad.nombre}</option>
                 ))}
             </select>
-            
+
             {/* FECHA DE POSTULACION */}
-            <input 
+            <input
                 type="date"
                 value={fechaPostulacion}
-                onChange={evento => setFechaPostulacion(evento.target.value)}
-                placeholder="Tipo de modalidad de la vacante"/>
+                onChange={evento => setFechaPostulacion(evento.target.value)}/>
 
+            {/* MENSAJES */}
             {aviso && <p>{aviso}</p>}
             {cargando && <p>Espera un momento...</p>}
             {error && <p>Ocurrió un error: {error}</p>}
+            {exito && <p>{exito}</p>}
 
-            <button onClick={manejarRegistro}>Registrar postulación</button>
-                
+            <button onClick={manejarRegistro} disabled={cargando}>
+                {cargando ? "Registrando..." : "Registrar postulación"}
+            </button>
+
         </div>
     )
 }
