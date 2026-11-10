@@ -72,9 +72,18 @@ function NuevaPostulacion({ token, subirContador }: Props){
     useEffect(() => {
         async function traerCatalogos() {
             const datosMercados = await listarMercados()
-            setMercados(datosMercados)
             const datosModalidades = await listarModalidades()
-            setModalidades(datosModalidades)
+            try{
+                setMercados(datosMercados)
+                setModalidades(datosModalidades)
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message)
+                } else {
+                    setError("Ocurrió un error inesperado")
+                }
+            }
         }
         traerCatalogos()
     }, [])
