@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { crearPostulacion, listarMercados, listarModalidades } from "../servicios/api"
-import { type MercadoSalida, type EstadoSalida, type ModalidadSalida } from "../tipos/api";
+import { type MercadoSalida, type ModalidadSalida } from "../tipos/api";
 
 interface Props {
     token: string;
@@ -52,7 +52,7 @@ function NuevaPostulacion({ token }: Props){
         
         try {
             setCargando(true)
-            const respuesta = await crearPostulacion(token, datosPostulacion)
+            await crearPostulacion(token, datosPostulacion)
         }
         catch (error) {
             if (error instanceof Error){
