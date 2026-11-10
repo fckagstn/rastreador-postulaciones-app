@@ -70,19 +70,13 @@ function NuevaPostulacion({ token, subirContador }: Props){
 
     // Listar mercados y modalidades para ser usados en <select>
     useEffect(() => {
-        async function traerMercados() {
-            const datos = await listarMercados()
-            setMercados(datos)
+        async function traerCatalogos() {
+            const datosMercados = await listarMercados()
+            setMercados(datosMercados)
+            const datosModalidades = await listarModalidades()
+            setModalidades(datosModalidades)
         }
-        traerMercados()
-    }, [])
-
-    useEffect(() => {
-        async function traerModalidades() {
-            const datos = await listarModalidades()
-            setModalidades(datos)
-        }
-        traerModalidades()
+        traerCatalogos()
     }, [])
 
     return(
