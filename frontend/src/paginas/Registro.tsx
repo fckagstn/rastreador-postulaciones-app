@@ -6,7 +6,7 @@ interface Props{
     irALogin: () => void;
 }
 
-function Registro({ alIniciarSesion, irALogin }: Props) {
+function Registro({ alIniciarSesion }: Props) {
 
     const [cargando, setCargando] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -91,7 +91,6 @@ function Registro({ alIniciarSesion, irALogin }: Props) {
             {error && <p>Ocurrió un error: {error}</p>}
 
             <button onClick={manejarRegistro}>Registrarse</button>
-            <button onClick={irALogin}>¿Ya tienes cuenta? Inicia sesión</button>
             
         </div>
     )
