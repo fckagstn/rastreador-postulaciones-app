@@ -85,7 +85,7 @@ export async function listarModalidades(): Promise<ModalidadSalida[]> {
 export async function crearPostulacion(token: string, postulacion : PostulacionEntrada): Promise<PostulacionSalida> {
     const respuesta = await fetch(`${apiUrl}/postulaciones`, {
         method: "POST",
-        headers: cabecera(token),
+        headers: {...cabecera(token), "Content-Type": "application/json"}, 
         body: JSON.stringify(postulacion),
     });
     await verificarRespuesta(respuesta)
