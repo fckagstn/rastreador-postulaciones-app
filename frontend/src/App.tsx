@@ -3,29 +3,14 @@ import Login from "./paginas/Login"
 import ListarPostulaciones from "./paginas/ListarPostulaciones"
 import Registro from "./paginas/Registro"
 import NuevaPostulacion from "./paginas/NuevaPostulacion"
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
+import { Routes, Route, Link, Navigate } from 'react-router-dom'
 import RutaProtegida from "./componentes/RutaProtegida"
+import { useAuth } from "./contextos/AuthContexto"
 
 function App() {
 
-  const [token, setToken] = useState(localStorage.getItem("token"))
   const [contador, setContador] = useState(0)
-
-  const navigate = useNavigate()
-
-  function guardarToken(token: string){
-    setToken(token)
-    localStorage.setItem("token", token)
-
-    navigate("/postulaciones")
-  }
-
-  function removerToken() {
-    setToken(null)
-    localStorage.removeItem("token")
-
-    navigate("/login")
-  }
+  const { token, removerToken } = useAuth()
 
   function subirContador() {
     setContador((valorAnterior) => valorAnterior + 1)
@@ -43,18 +28,18 @@ function App() {
 
     <Routes>
 
-      <Route path="/registro" element={<Registro alIniciarSesion={guardarToken}/>}/>
-      <Route path="/login" element={<Login alIniciarSesion={guardarToken}/>}/>
+      <Route path="/registro" element={<Registro/>}/>
+      <Route path="/login" element={<Login />}/>
 
       <Route path="/postulaciones" element={
-        <RutaProtegida token={token}>
-          <ListarPostulaciones token={token} contador={contador}/>
+        <RutaProtegida>
+          <ListarPostulaciones contador={contador}/>
         </RutaProtegida>
       }/>
 
       <Route path="/postulaciones/nueva" element={
-        <RutaProtegida token={token}>
-          <NuevaPostulacion token={token} subirContador={subirContador}/>
+        <RutaProtegida>
+          <NuevaPostulacion subirContador={subirContador}/>
         </RutaProtegida>
       }/>
 

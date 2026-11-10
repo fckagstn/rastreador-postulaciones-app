@@ -2,23 +2,28 @@ import { useState, useEffect } from "react";
 import type { PostulacionSalida } from "../tipos/api";
 import { listarPostulaciones } from "../servicios/api";
 import TarjetaPostulacion from "../componentes/TarjetaPostulacion";
+import { useAuth } from "../contextos/AuthContexto";
 
 interface Props{
-    token: string;
     contador: number;
 }
 
-function ListarPostulaciones({ token, contador }: Props){
+function ListarPostulaciones({ contador }: Props){
 
     const [postulaciones, setPostulaciones] = useState<PostulacionSalida[]>([])
     const [error, setError] = useState<string | null>(null)
     const [cargando, setCargando] = useState(false)
     
+    const { token } = useAuth()
+    if (!token) return null
+
+    const tokenValido: string = token
+    
     useEffect(() => {
         async function manejarPostulaciones() {
             try{
                 setCargando(true)
-                const respuesta = await listarPostulaciones(token)
+                const respuesta = await listarPostulaciones(tokenValido)
                 setPostulaciones(respuesta)
             }
             catch (error){

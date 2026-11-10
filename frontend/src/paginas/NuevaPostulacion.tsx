@@ -1,14 +1,13 @@
-
 import { useState, useEffect } from "react"
 import { crearPostulacion, listarMercados, listarModalidades } from "../servicios/api"
 import { type MercadoSalida, type ModalidadSalida } from "../tipos/api"
+import { useAuth } from "../contextos/AuthContexto";
 
 interface Props {
-    token: string;
     subirContador: () => void;
 }
 
-function NuevaPostulacion({ token, subirContador }: Props){
+function NuevaPostulacion({ subirContador }: Props){
 
     // AVISOS
     const [cargando, setCargando] = useState(false)
@@ -28,6 +27,11 @@ function NuevaPostulacion({ token, subirContador }: Props){
     const [mercadoId, setMercadoId] = useState("")
     const [modalidadId, setModalidadId] = useState("")
     const [fechaPostulacion, setFechaPostulacion] = useState("")
+
+    const { token } = useAuth()
+    if (!token) return null
+
+    const tokenValido: string = token
 
     async function manejarRegistro() {
 
@@ -62,7 +66,7 @@ function NuevaPostulacion({ token, subirContador }: Props){
         try {
             setCargando(true)
 
-            await crearPostulacion(token, datosPostulacion)
+            await crearPostulacion(tokenValido, datosPostulacion)
 
             subirContador()
 

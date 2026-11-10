@@ -1,11 +1,12 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../contextos/AuthContexto";
 
 interface Props {
-    token: string;
     children: React.ReactNode
 }
 
-function RutaProtegida({token, children}: Props){
+function RutaProtegida({children}: Props){
+    const {token} = useAuth()
     if (!token) {
         return <Navigate to="/login"/>
     }

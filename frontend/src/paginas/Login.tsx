@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { iniciarSesion } from "../servicios/api";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contextos/AuthContexto";
 
-interface Props{
-    alIniciarSesion: (token: string) => void;
-}
-
-function Login({ alIniciarSesion }: Props){
+function Login(){
 
     const [cargando, setCargando] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -14,6 +11,8 @@ function Login({ alIniciarSesion }: Props){
 
     const [correo, setCorreo] = useState("")
     const [contrasena, setContrasena] = useState("")
+
+    const { guardarToken } = useAuth()
 
     async function manejarLogin() {
         const listaAviso: string[] = []
@@ -33,7 +32,7 @@ function Login({ alIniciarSesion }: Props){
         try {
             setCargando(true)
             const respuesta = await iniciarSesion(datosLogin)
-            alIniciarSesion(respuesta.access_token)
+            guardarToken(respuesta.access_token)
         }
         catch (error) {
             if (error instanceof Error){
