@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { iniciarSesion, registrarUsuario } from "../servicios/api"
+import { Link } from "react-router-dom";
 
 interface Props{
     alIniciarSesion: (token: string) => void;
@@ -90,6 +91,7 @@ function Registro({ alIniciarSesion }: Props) {
             {error && <p>Ocurrió un error: {error}</p>}
 
             <button onClick={manejarRegistro}>Registrarse</button>
+            <Link to="/login">¿Ya tienes cuenta? Inicia sesión</Link>
             
         </div>
     )
