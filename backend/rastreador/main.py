@@ -7,6 +7,7 @@ import logging                                               # Para registrar ev
 import uuid           
 import rastreador.rutas.cuentas as cuentas  
 import rastreador.rutas.postulaciones as postulaciones
+import rastreador.rutas.catalogos as catalogos
 
 logging.basicConfig(
     level=logging.INFO,
@@ -56,6 +57,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# Registrar los routers de cuentas y postulaciones
 app.include_router(cuentas.router)
 app.include_router(postulaciones.router)
+app.include_router(catalogos.router)
