@@ -4,9 +4,10 @@ import { type MercadoSalida, type ModalidadSalida } from "../tipos/api";
 
 interface Props {
     token: string;
+    subirContador: () => void;
 }
 
-function NuevaPostulacion({ token }: Props){
+function NuevaPostulacion({ token, subirContador }: Props){
 
     // AVISOS
     const [cargando, setCargando] = useState(false)
@@ -53,6 +54,7 @@ function NuevaPostulacion({ token }: Props){
         try {
             setCargando(true)
             await crearPostulacion(token, datosPostulacion)
+            subirContador()
         }
         catch (error) {
             if (error instanceof Error){
